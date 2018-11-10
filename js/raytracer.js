@@ -14,16 +14,33 @@ function render() {
     const height = canvas.height;
     let imageData = context.getImageData(0, 0, width, height);
 
-
     let world = new HitableList();
-    world.list.push(new Sphere(new Vector(0, 0, -1), 0.5, new LambertianMaterial(new Vector(0.8, 0.3, 0.3))));
-    world.list.push(new Sphere(new Vector(0, -100.5, -1), 100, new LambertianMaterial(new Vector(0.8, 0.8, 0.0))));
-    world.list.push(new Sphere(new Vector(1, 0, -1), 0.5, new MetalMaterial(new Vector(0.8, 0.6, 0.2), 0.3)));
 
-    world.list.push(new Sphere(new Vector(-1, 0, -1), 0.5, new DielectricMaterial(1.5)));
-    //world.list.push(new Sphere(new Vector(-1, 0, -1), 0.5, new MetalMaterial(new Vector(0.8, 0.8, 0.8), 0.8)));
+    world.list.push(new Sphere(new Vector(0, -1000, -1), 1000, new LambertianMaterial(new Vector(0.5, 0.5, 0.5))));
 
-    let cam = new Camera(new Vector(-2, 2, 1), new Vector(0, 0, -1), new Vector(0, 1, 0), 50, width / height);
+    for (let a = -10; a < 10; a++) {
+        for (let b = -10; b < 10; b++) {
+
+            let materialChoice = Math.random();
+            let material;
+            if (materialChoice < 0.3) {
+                material = new LambertianMaterial(new Vector(Math.random() * Math.random(), Math.random() * Math.random(), Math.random() * Math.random()));
+            } else if (materialChoice < 0.9) {
+                material = new MetalMaterial(new Vector(0.5 * (1 + Math.random()), 0.5 * (1 + Math.random()), 0.5 * (1 + Math.random())), 0.3 * Math.random());
+            } else {
+                material = new DielectricMaterial(1.5);
+            }
+
+            world.list.push(new Sphere(new Vector(a + 0.9*Math.random(), 0.2, b + 0.9*Math.random()), 0.2, material));
+        }
+    }
+
+    world.list.push(new Sphere(new Vector(0, 1, 0), 1.0, new LambertianMaterial(new Vector(0.2, 0.4, 0.7))));
+    world.list.push(new Sphere(new Vector(-2, 1, 0), 1.0, new MetalMaterial(new Vector(8.0, 0.8, 0.8), 0.0)));
+    world.list.push(new Sphere(new Vector(2, 1, 0), 1.0, new DielectricMaterial(1.5)));
+
+
+    let cam = new Camera(new Vector(-4, 2, 4), new Vector(0, 0, -1), new Vector(0, 1, 0), 50, width / height);
 
     let ns = 50;
 
