@@ -177,3 +177,11 @@ function randomInUnitSphere() {
     } while (p.dot(p) >= 1.0);
     return p;
 }
+
+function randomInUnitDisk() {
+    let p;
+    do {
+        p = (new Vector(Math.random(), Math.random(), 0)).multiply(2.0).subtract(new Vector(1, 1, 0));
+    } while (p.dot(p) >= 1.0);
+    return p;
+}

@@ -19,7 +19,9 @@ function render() {
     world.list.push(new Sphere(new Vector(0, 0, -1), 0.5, new LambertianMaterial(new Vector(0.8, 0.3, 0.3))));
     world.list.push(new Sphere(new Vector(0, -100.5, -1), 100, new LambertianMaterial(new Vector(0.8, 0.8, 0.0))));
     world.list.push(new Sphere(new Vector(1, 0, -1), 0.5, new MetalMaterial(new Vector(0.8, 0.6, 0.2), 0.3)));
-    world.list.push(new Sphere(new Vector(-1, 0, -1), 0.5, new MetalMaterial(new Vector(0.8, 0.8, 0.8), 0.8)));
+
+    world.list.push(new Sphere(new Vector(-1, 0, -1), 0.5, new DielectricMaterial(1.5)));
+    //world.list.push(new Sphere(new Vector(-1, 0, -1), 0.5, new MetalMaterial(new Vector(0.8, 0.8, 0.8), 0.8)));
 
     let cam = new Camera();
     let ns = 50;

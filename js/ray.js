@@ -90,6 +90,7 @@ LambertianMaterial.prototype = {
     }
 };
 
+
 function MetalMaterial(a, fuzz) {
     this.albedo = a;
     this.fuzz = fuzz > 1.0 ? 1.0 : fuzz;
@@ -106,6 +107,64 @@ MetalMaterial.prototype = {
     }
 };
 
+function DielectricMaterial(ri) {
+    this.refractiveIndex = ri;
+}
+DielectricMaterial.prototype = {
+    reflect: function (v, n) {
+        return v.subtract( n.multiply(2.0 * v.dot(n)) );
+    },
+    refract: function (v, n, niOverNt, refracted) {
+        let uv = v.unit();
+        let dt = uv.dot(n);
+        let discriminant = 1.0 - niOverNt*niOverNt*(1 - dt*dt);
+        if (discriminant > 0) {
+            refracted.overwrite( uv.subtract(n.multiply(dt)).multiply(niOverNt).subtract( n.multiply(Math.sqrt(discriminant)) ) );
+            return true;
+        } else {
+            return false;
+        }
+    },
+    schlick: function (cosine, refIndex) {
+        let r0 = (1 - refIndex) / (1 + refIndex);
+        r0 *= r0;
+        return r0 + (1 - r0)*Math.pow(1-cosine, 5);
+    },
+    scatter: function (rayIn, hitRec, attenuation, rayScattered) {
+        let outwardNormal = new Vector();
+        let reflected = this.reflect(rayIn.direction(), hitRec.normal);
+        let niOverNt = 0;
+        attenuation.overwrite(new Vector(1.0, 1.0, 1.0));
+
+        let refracted = new Vector();
+        let reflectProb = 0;
+        let cosine = 0;
+
+        if (rayIn.direction().dot(hitRec.normal) > 0) {
+            outwardNormal = hitRec.normal.negative();
+            niOverNt = this.refractiveIndex;
+            cosine = this.refractiveIndex * rayIn.direction().dot(hitRec.normal) / rayIn.direction().length();
+        } else {
+            outwardNormal.overwrite(hitRec.normal);
+            niOverNt = 1.0 / this.refractiveIndex;
+            cosine = -(rayIn.direction().dot(hitRec.normal)) / rayIn.direction().length();
+        }
+
+        if (this.refract(rayIn.direction(), outwardNormal, niOverNt, refracted)) {
+            reflectProb = this.schlick(cosine, this.refractiveIndex);
+        } else {
+            rayScattered.overwrite( new Ray(hitRec.p, reflected) );
+            reflectProb = 1.0;
+        }
+
+        if (Math.random() < reflectProb) {
+            rayScattered.overwrite( new Ray(hitRec.p, reflected) );
+        } else {
+            rayScattered.overwrite( new Ray(hitRec.p, refracted) );
+        }
+        return true;
+    }
+};
 
 
 
