@@ -20,11 +20,19 @@ Ray.prototype = {
 };
 
 
-function Camera() {
-    this.lowerLeftCorner = new Vector(-2.0, -1.0, -1.0);
-    this.horizontal = new Vector(4.0, 0.0, 0.0);
-    this.vertical = new Vector(0.0, 2.0, 0.0);
-    this.origin = new Vector(0.0, 0.0, 0.0);
+function Camera(lookFrom, lookAt, vUp, vFov, aspect) {
+    let theta = vFov * Math.PI / 180.0;
+    let halfHeight = Math.tan(theta / 2);
+    let halfWidth = aspect * halfHeight;
+
+    this.origin = lookFrom;
+    let w = lookFrom.subtract(lookAt).unit();
+    let u = vUp.cross(w).unit();
+    let v = w.cross(u);
+
+    this.lowerLeftCorner = this.origin.subtract( u.multiply(halfWidth) ).subtract( v.multiply(halfHeight) ).subtract(w);
+    this.horizontal = u.multiply(halfWidth).multiply(2);
+    this.vertical = v.multiply(halfHeight).multiply(2);
 }
 
 Camera.prototype = {

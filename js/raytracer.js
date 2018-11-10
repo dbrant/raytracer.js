@@ -23,7 +23,8 @@ function render() {
     world.list.push(new Sphere(new Vector(-1, 0, -1), 0.5, new DielectricMaterial(1.5)));
     //world.list.push(new Sphere(new Vector(-1, 0, -1), 0.5, new MetalMaterial(new Vector(0.8, 0.8, 0.8), 0.8)));
 
-    let cam = new Camera();
+    let cam = new Camera(new Vector(-2, 2, 1), new Vector(0, 0, -1), new Vector(0, 1, 0), 50, width / height);
+
     let ns = 50;
 
     for (let y = 0; y < height; y++) {
