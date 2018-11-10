@@ -18,8 +18,8 @@ function render() {
 
     world.list.push(new Sphere(new Vector(0, -1000, -1), 1000, new LambertianMaterial(new Vector(0.5, 0.5, 0.5))));
 
-    for (let a = -10; a < 10; a++) {
-        for (let b = -10; b < 10; b++) {
+    for (let a = -12; a < 12; a++) {
+        for (let b = -12; b < 12; b++) {
 
             let materialChoice = Math.random();
             let material;
@@ -31,20 +31,21 @@ function render() {
                 material = new DielectricMaterial(1.5);
             }
 
-            world.list.push(new Sphere(new Vector(a + 0.9*Math.random(), 0.2, b + 0.9*Math.random()), 0.1 + Math.random() * 0.4, material));
+            let radius = 0.1 + Math.random() * 0.3;
+            world.list.push(new Sphere(new Vector(a + 0.9*Math.random(), radius, b + 0.9*Math.random()), radius, material));
         }
     }
 
-    world.list.push(new Sphere(new Vector(0, 1, 0), 1.0, new DielectricMaterial(1.5) ));  // new LambertianMaterial(new Vector(0.2, 0.4, 0.7))
+    world.list.push(new Sphere(new Vector(0, 1, 0), 1.0, new DielectricMaterial(1.5) ));
     world.list.push(new Sphere(new Vector(-2, 1, 0), 1.0, new MetalMaterial(new Vector(1.0, 0.8, 0.8), 0.0) ));
-    world.list.push(new Sphere(new Vector(-1, 1, Math.sqrt(3)), 1.0, new MetalMaterial(new Vector(0.8, 0.8, 0.8), 0.0)));
-    world.list.push(new Sphere(new Vector(-1, 2.2, 1 / Math.sqrt(3)), 0.8, new MetalMaterial(new Vector(0.8, 0.8, 1.0), 0.0) ));
+    world.list.push(new Sphere(new Vector(-1, 1, Math.sqrt(3)), 1.0, new MetalMaterial(new Vector(0.8, 0.8, 0.8), 0.0) ));
+    world.list.push(new Sphere(new Vector(-1, 2.3, 1 / Math.sqrt(3)), 0.8, new DielectricMaterial(1.5) ));
 
 
-    let lookFrom = new Vector(-3, 6, 5);
-    let lookAt = new Vector(-1, 0, 0);
+    let lookFrom = new Vector(-3, 3.5, 10);
+    let lookAt = new Vector(-1, 1, 0);
     let distToFocus = lookFrom.subtract(lookAt).length();
-    let cam = new Camera(lookFrom, lookAt, new Vector(0, 1, 0), 40, width / height, 0.01, distToFocus);
+    let cam = new Camera(lookFrom, lookAt, new Vector(0, 1, 0), 35, width / height, 0.1, distToFocus);
 
     let ns = 100;
 
