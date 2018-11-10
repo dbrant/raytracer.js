@@ -36,11 +36,14 @@ function render() {
     }
 
     world.list.push(new Sphere(new Vector(0, 1, 0), 1.0, new LambertianMaterial(new Vector(0.2, 0.4, 0.7))));
-    world.list.push(new Sphere(new Vector(-2, 1, 0), 1.0, new MetalMaterial(new Vector(8.0, 0.8, 0.8), 0.0)));
+    world.list.push(new Sphere(new Vector(-2, 1, 0), 1.0, new MetalMaterial(new Vector(0.8, 0.8, 0.8), 0.0)));
     world.list.push(new Sphere(new Vector(2, 1, 0), 1.0, new DielectricMaterial(1.5)));
 
 
-    let cam = new Camera(new Vector(-4, 2, 4), new Vector(0, 0, -1), new Vector(0, 1, 0), 50, width / height);
+    let lookFrom = new Vector(-4, 2, 4);
+    let lookAt = new Vector(0, 0, -1);
+    let distToFocus = lookFrom.subtract(lookAt).length();
+    let cam = new Camera(lookFrom, lookAt, new Vector(0, 1, 0), 50, width / height, 0.2, distToFocus);
 
     let ns = 50;
 
