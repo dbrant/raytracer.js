@@ -1,6 +1,7 @@
-function Sphere(cen, rad) {
+function Sphere(cen, rad, material) {
     this.center = cen;
     this.radius = rad;
+    this.material = material;
 }
 
 Sphere.prototype = {
@@ -16,6 +17,7 @@ Sphere.prototype = {
                 hitRec.t = temp;
                 hitRec.p = ray.pointAtParameter(hitRec.t);
                 hitRec.normal = (hitRec.p.subtract(this.center).divide(this.radius));
+                hitRec.material = this.material;
                 return true;
             }
             temp = (-b + Math.sqrt(b*b - a*c)) / a;
@@ -23,6 +25,7 @@ Sphere.prototype = {
                 hitRec.t = temp;
                 hitRec.p = ray.pointAtParameter(hitRec.t);
                 hitRec.normal = (hitRec.p.subtract(this.center).divide(this.radius));
+                hitRec.material = this.material;
                 return true;
             }
         }

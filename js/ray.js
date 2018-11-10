@@ -12,6 +12,10 @@ Ray.prototype = {
     },
     pointAtParameter: function (t) {
         return this.A.add(this.B.multiply(t));
+    },
+    overwrite: function (r) {
+        this.A = r.A;
+        this.B = r.B;
     }
 };
 
@@ -30,12 +34,21 @@ Camera.prototype = {
 };
 
 
-
 function HitRecord() {
     this.t = 0.0;
     this.p = new Vector(0, 0, 0);
     this.normal = new Vector(0, 0, 0);
+    this.material = new Material();
 }
+HitRecord.prototype = {
+    overwrite: function (rec) {
+        this.t = rec.t;
+        this.p = rec.p;
+        this.normal = rec.normal;
+        this.material = rec.material;
+    }
+};
+
 
 function HitableList() {
     this.list = [];
@@ -50,11 +63,48 @@ HitableList.prototype = {
             if (this.list[i].hit(ray, tMin, closestSoFar, tempRec)) {
                 hitAnything = true;
                 closestSoFar = tempRec.t;
-                hitRec.t = tempRec.t;
-                hitRec.p = tempRec.p;
-                hitRec.normal = tempRec.normal;
+                hitRec.overwrite(tempRec);
             }
         }
         return hitAnything;
     }
 };
+
+
+function Material() {
+}
+Material.prototype = {
+    scatter: function (ray, tMin, tMax, hitRec) {
+    }
+};
+
+function LambertianMaterial(a) {
+    this.albedo = a;
+}
+LambertianMaterial.prototype = {
+    scatter: function (rayIn, hitRec, attenuation, rayScattered) {
+        let target = hitRec.p.add(hitRec.normal).add(randomInUnitSphere());
+        rayScattered.overwrite(new Ray(hitRec.p, target.subtract(hitRec.p)));
+        attenuation.overwrite(this.albedo);
+        return true;
+    }
+};
+
+function MetalMaterial(a) {
+    this.albedo = a;
+}
+MetalMaterial.prototype = {
+    reflect: function (v, n) {
+        return v.subtract( n.multiply(2.0 * v.dot(n)) );
+    },
+    scatter: function (rayIn, hitRec, attenuation, rayScattered) {
+        let reflected = this.reflect(rayIn.direction().unit(), hitRec.normal);
+        rayScattered.overwrite(new Ray(hitRec.p, reflected));
+        attenuation.overwrite(this.albedo);
+        return rayScattered.direction().dot(hitRec.normal) > 0;
+    }
+};
+
+
+
+

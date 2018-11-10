@@ -16,8 +16,10 @@ function render() {
 
 
     let world = new HitableList();
-    world.list.push(new Sphere(new Vector(0, 0, -1), 0.5));
-    world.list.push(new Sphere(new Vector(0, -100.5, -1), 100));
+    world.list.push(new Sphere(new Vector(0, 0, -1), 0.5, new LambertianMaterial(new Vector(0.8, 0.3, 0.3))));
+    world.list.push(new Sphere(new Vector(0, -100.5, -1), 100, new LambertianMaterial(new Vector(0.8, 0.8, 0.0))));
+    world.list.push(new Sphere(new Vector(1, 0, -1), 0.5, new MetalMaterial(new Vector(0.8, 0.6, 0.2))));
+    world.list.push(new Sphere(new Vector(-1, 0, -1), 0.5, new MetalMaterial(new Vector(0.8, 0.8, 0.8))));
 
     let cam = new Camera();
     let ns = 50;
@@ -31,7 +33,7 @@ function render() {
                 let v = (y + Math.random()) / height;
                 let r = cam.getRay(u, v);
                 let p = r.pointAtParameter(2.0);
-                color = color.add(getColor(r, world));
+                color = color.add(getColor(r, world, 0));
             }
             color = color.divide(ns);
 
@@ -47,19 +49,18 @@ function render() {
 }
 
 
-function randomInUnitSphere() {
-    let p;
-    do {
-        p = (new Vector(Math.random(), Math.random(), Math.random())).multiply(2.0).subtract(new Vector(1, 1, 1));
-    } while (p.dot(p) >= 1.0);
-    return p;
-}
-
-function getColor(ray, world) {
+function getColor(ray, world, depth) {
     let rec = new HitRecord();
     if (world.hit(ray, 0.001, Number.MAX_VALUE, rec)) {
-        let target = rec.p.add(rec.normal).add(randomInUnitSphere());
-        return getColor(new Ray(rec.p, target.subtract(rec.p)), world).multiply(0.5);
+        let scattered = new Ray(new Vector(), new Vector());
+        let attenuation = new Vector();
+
+        if (depth < 50 && rec.material.scatter(ray, rec, attenuation, scattered)) {
+            return attenuation.multiply(getColor(scattered, world, depth + 1));
+        } else {
+            return new Vector(0, 0, 0);
+        }
+
     } else {
         let unitDirection = ray.direction().unit();
         t = 0.5 * (unitDirection.y + 1.0);

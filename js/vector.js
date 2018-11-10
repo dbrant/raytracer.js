@@ -69,6 +69,11 @@ Vector.prototype = {
         this.y = y;
         this.z = z;
         return this;
+    },
+    overwrite: function (v) {
+        this.x = v.x;
+        this.y = v.y;
+        this.z = v.z;
     }
 };
 
@@ -164,3 +169,11 @@ Vector.fromArray = function(a) {
 Vector.angleBetween = function(a, b) {
     return a.angleTo(b);
 };
+
+function randomInUnitSphere() {
+    let p;
+    do {
+        p = (new Vector(Math.random(), Math.random(), Math.random())).multiply(2.0).subtract(new Vector(1, 1, 1));
+    } while (p.dot(p) >= 1.0);
+    return p;
+}
