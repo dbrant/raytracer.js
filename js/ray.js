@@ -90,8 +90,9 @@ LambertianMaterial.prototype = {
     }
 };
 
-function MetalMaterial(a) {
+function MetalMaterial(a, fuzz) {
     this.albedo = a;
+    this.fuzz = fuzz > 1.0 ? 1.0 : fuzz;
 }
 MetalMaterial.prototype = {
     reflect: function (v, n) {
@@ -99,7 +100,7 @@ MetalMaterial.prototype = {
     },
     scatter: function (rayIn, hitRec, attenuation, rayScattered) {
         let reflected = this.reflect(rayIn.direction().unit(), hitRec.normal);
-        rayScattered.overwrite(new Ray(hitRec.p, reflected));
+        rayScattered.overwrite(new Ray(hitRec.p, reflected.add(randomInUnitSphere().multiply(this.fuzz))));
         attenuation.overwrite(this.albedo);
         return rayScattered.direction().dot(hitRec.normal) > 0;
     }
