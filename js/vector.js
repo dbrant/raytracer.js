@@ -173,7 +173,7 @@ Vector.angleBetween = function(a, b) {
 function randomInUnitSphere() {
     let p;
     do {
-        p = (new Vector(Math.random(), Math.random(), Math.random())).multiply(2.0).subtract(new Vector(1, 1, 1));
+        p = (new Vector(Math.random() * 2.0 - 1.0, Math.random() * 2.0 - 1.0, Math.random() * 2.0 - 1.0));
     } while (p.dot(p) >= 1.0);
     return p;
 }
@@ -181,7 +181,7 @@ function randomInUnitSphere() {
 function randomInUnitDisk() {
     let p;
     do {
-        p = (new Vector(Math.random(), Math.random(), 0)).multiply(2.0).subtract(new Vector(1, 1, 0));
+        p = (new Vector(Math.random() * 2.0 - 1.0, Math.random() * 2.0 - 1.0, 0));
     } while (p.dot(p) >= 1.0);
     return p;
 }

@@ -12,7 +12,7 @@ Sphere.prototype = {
         const c = oc.dot(oc) - this.radius * this.radius;
         const discriminant = b*b - a*c;
         if (discriminant > 0) {
-            let temp = (-b - Math.sqrt(b*b - a*c)) / a;
+            let temp = (-b - Math.sqrt(discriminant)) / a;
             if (temp < tMax && temp > tMin) {
                 hitRec.t = temp;
                 hitRec.p = ray.pointAtParameter(hitRec.t);
@@ -20,7 +20,7 @@ Sphere.prototype = {
                 hitRec.material = this.material;
                 return true;
             }
-            temp = (-b + Math.sqrt(b*b - a*c)) / a;
+            temp = (-b + Math.sqrt(discriminant)) / a;
             if (temp < tMax && temp > tMin) {
                 hitRec.t = temp;
                 hitRec.p = ray.pointAtParameter(hitRec.t);

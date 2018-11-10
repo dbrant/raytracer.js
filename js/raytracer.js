@@ -31,23 +31,27 @@ function render() {
                 material = new DielectricMaterial(1.5);
             }
 
-            world.list.push(new Sphere(new Vector(a + 0.9*Math.random(), 0.2, b + 0.9*Math.random()), 0.2, material));
+            world.list.push(new Sphere(new Vector(a + 0.9*Math.random(), 0.2, b + 0.9*Math.random()), 0.1 + Math.random() * 0.4, material));
         }
     }
 
-    world.list.push(new Sphere(new Vector(0, 1, 0), 1.0, new LambertianMaterial(new Vector(0.2, 0.4, 0.7))));
-    world.list.push(new Sphere(new Vector(-2, 1, 0), 1.0, new MetalMaterial(new Vector(0.8, 0.8, 0.8), 0.0)));
-    world.list.push(new Sphere(new Vector(2, 1, 0), 1.0, new DielectricMaterial(1.5)));
+    world.list.push(new Sphere(new Vector(0, 1, 0), 1.0, new DielectricMaterial(1.5) ));  // new LambertianMaterial(new Vector(0.2, 0.4, 0.7))
+    world.list.push(new Sphere(new Vector(-2, 1, 0), 1.0, new MetalMaterial(new Vector(1.0, 0.8, 0.8), 0.0) ));
+    world.list.push(new Sphere(new Vector(-1, 1, Math.sqrt(3)), 1.0, new MetalMaterial(new Vector(0.8, 0.8, 0.8), 0.0)));
+    world.list.push(new Sphere(new Vector(-1, 2.2, 1 / Math.sqrt(3)), 0.8, new MetalMaterial(new Vector(0.8, 0.8, 1.0), 0.0) ));
 
 
-    let lookFrom = new Vector(-4, 2, 4);
-    let lookAt = new Vector(0, 0, -1);
+    let lookFrom = new Vector(-3, 6, 5);
+    let lookAt = new Vector(-1, 0, 0);
     let distToFocus = lookFrom.subtract(lookAt).length();
-    let cam = new Camera(lookFrom, lookAt, new Vector(0, 1, 0), 50, width / height, 0.2, distToFocus);
+    let cam = new Camera(lookFrom, lookAt, new Vector(0, 1, 0), 40, width / height, 0.01, distToFocus);
 
-    let ns = 50;
+    let ns = 100;
 
     for (let y = 0; y < height; y++) {
+
+        console.log("Rendering line " + y);
+
         for (let x = 0; x < width; x++) {
 
             let color = new Vector(0, 0, 0);
